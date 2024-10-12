@@ -1,30 +1,26 @@
-const bcrypt = require("../utils/bcrypt");
-const DocGiaModel = require("../schemas/docgia.schemas");
+const jwt = require("../utils/jwt");
 
-async function login(req, res) {
-    const { username, password } = req.body;
-    const docGia = await DocGiaModel.findDocGia({ username });
+const login = async (req, res) => {
+    const { email, password } = req.body;
+    const user = await req.db.collection('docgia').findOne({ email, password });
+    if (!user) return res.status(400).json({ message: "Sai thông tin đăng nhập" });
+    
+    const token = jwt.encode({ _id: user._id });
+    res.json({ token });
+};
 
-    if (!docGia || !bcrypt.comparePassword(docGia.Password, password)) {
-        return res.status(401).json({ message: "Invalid credentials" });
-    }
+const register = async (req, res) => {
+    const { name, email, password } = req.body;
+    const existingUser = await req.db.collection('docgia').findOne({ email });
+    if (existingUser) return res.status(400).json({ message: "Email đã tồn tại" });
 
-    res.json({ message: "Login successful", docGia });
-}
+    const newUser = { name, email, password };
+    await req.db.collection('docgia').insertOne(newUser);
+    res.status(201).json({ message: "Đăng ký thành công" });
+};
 
-async function register(req, res) {
-    const { username, password, fullName } = req.body;
-    const existingDocGia = await DocGiaModel.findDocGia({ username });
+const auth = (req, res) => {
+    res.json({ user: req.user });
+};
 
-    if (existingDocGia) {
-        return res.status(400).json({ message: "Username already exists" });
-    }
-
-    const hashedPassword = bcrypt.hashPassword(password);
-    const newDocGia = { username, Password: hashedPassword, fullName };
-
-    await DocGiaModel.createDocGia(newDocGia);
-    res.status(201).json({ message: "Registration successful" });
-}
-
-module.exports = { login, register };
+module.exports = { login, register, auth };
