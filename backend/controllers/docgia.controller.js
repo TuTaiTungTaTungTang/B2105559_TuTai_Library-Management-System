@@ -1,26 +1,55 @@
-const jwt = require("../utils/jwt");
+const DOCGIA = require("../schemas/docgia.schema")
+const bcrypt = require("../utils/bcrypt")
+const jwt = require("../utils/jwt")
 
-const login = async (req, res) => {
-    const { email, password } = req.body;
-    const user = await req.db.collection('docgia').findOne({ email, password });
-    if (!user) return res.status(400).json({ message: "Sai thông tin đăng nhập" });
-    
-    const token = jwt.encode({ _id: user._id });
-    res.json({ token });
-};
+class DocGiaController {
+    async register(req, res, next) {
+        try {
+            const {MADOCGIA, Password, HOLOT, TEN, NGAYSINH, PHAI, DIACHI, SODIENTHOAI} = req.body;
+            const user = await DOCGIA.findOne({MADOCGIA});
+            
+            if (user)
+                return res.status(400).json({message: "Mã độc giả đã tồn tại"});
+            
+            const newDocGia = await DOCGIA.create({
+                MADOCGIA: MADOCGIA,
+                Password: bcrypt.hashPassword(Password),
+                HOLOT: HOLOT,
+                TEN: TEN,
+                NGAYSINH: NGAYSINH,
+                PHAI: PHAI,
+                DIACHI: DIACHI,
+                SODIENTHOAI: SODIENTHOAI
+            }) 
+            console.log(newDocGia)
+            
+            const accessToken = jwt.sign({_id: newDocGia._id});
+            res.json({accessToken});
+        } catch (error) {
+            next(error);
+        }
+    }
 
-const register = async (req, res) => {
-    const { name, email, password } = req.body;
-    const existingUser = await req.db.collection('docgia').findOne({ email });
-    if (existingUser) return res.status(400).json({ message: "Email đã tồn tại" });
+    async login(req, res, next) {
+        try {
+            const {MADOCGIA, Password} = req.body;
+            const user = await DOCGIA.findOne({MADOCGIA});
+            
+            if (!user)
+                return res.status(400).json({message: "MSNV hoặc mật khẩu không chính xác"});
+            if (!bcrypt.comparePassword(user.Password, Password))
+                return res.status(400).json({message: "MSNV hoặc mật khẩu không chính xác"});
 
-    const newUser = { name, email, password };
-    await req.db.collection('docgia').insertOne(newUser);
-    res.status(201).json({ message: "Đăng ký thành công" });
-};
+            const accessToken = jwt.sign({_id: user._id});
+            res.json({accessToken});
+        } catch (error) {
+            next(error);
+        }
+    }
 
-const auth = (req, res) => {
-    res.json({ user: req.user });
-};
+    async auth(req, res, next) {
+        return res.json(req.user);
+    }
+}
 
-module.exports = { login, register, auth };
+module.exports = new DocGiaController()
