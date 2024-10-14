@@ -6,6 +6,11 @@ const SACH = new Schema(
 			type: String,
 			required: true,
 		},
+		THELOAI: {
+			type: Types.ObjectId,
+			required: true,
+			ref: "THELOAI",
+		},
         DONGIA: {
 			type: Number,
 			required: true,
@@ -27,6 +32,14 @@ const SACH = new Schema(
 			type: String,
 			required: true,
 		},
+		MOTA: {
+			type: String,
+			require: true,
+		},
+		HINHANH: {
+			type: String,
+			require: true,
+		}
 	},
 	{ timestamps: true }
 );
