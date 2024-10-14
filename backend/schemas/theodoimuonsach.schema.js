@@ -1,12 +1,34 @@
-const { getDB } = require("../db");
+const { Schema, model, Types } = require("mongoose");
 
-const THEODOIMUONSACH_COLLECTION = "THEODOIMUONSACH";
+const THEODOIMUONSACH = new Schema(
+	{
+		DOCGIA: {
+			type: Types.ObjectId,
+			required: true,
+			ref: "DOCGIA",
+		},
+        MASACH: {
+			type: Types.ObjectId,
+			required: true,
+			ref: "SACH",
+		},
+		NGAYMUON: {
+			type: Date,
+			required: true,
+		},
+		NGAYTRA: {
+			type: Date,
+			required: true,
+		},
+		TRANGTHAI: {
+			type: String,
+			required: true,
+			default: "waiting",
+		}
+	},
+	{ timestamps: true }
+);
 
-async function createTheoDoiMuonSach(theoDoi) {
-    const db = getDB();
-    return await db.collection(THEODOIMUONSACH_COLLECTION).insertOne(theoDoi);
-}
-
-// Thêm các hàm khác cho THEODOIMUONSACH nếu cần thiết
-
-module.exports = { createTheoDoiMuonSach };
+const theodoimuonsach = model("THEODOIMUONSACH", THEODOIMUONSACH);
+theodoimuonsach.createIndexes({DOCGIA: true, MASACH: true, NGAYMUON: true}, {unique: true});
+module.exports = theodoimuonsach;

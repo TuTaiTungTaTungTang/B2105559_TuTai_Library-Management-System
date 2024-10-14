@@ -1,15 +1,42 @@
-const { getDB } = require("../db");
+const { Schema, model } = require("mongoose");
 
-const DOCGIA_COLLECTION = "DOCGIA";
+const DOCGIA = new Schema(
+	{
+		MADOCGIA: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		Password: {
+			type: String,
+			required: true,
+		},
+		HOLOT: {
+			type: String,
+			required: true,
+		},
+		TEN: {
+			type: String,
+			required: true,
+		},
+		NGAYSINH: {
+			type: Date,
+			required: true,
+		},
+        PHAI: {
+			type: String,
+			required: true,
+		},
+        DIACHI: {
+			type: String,
+			required: true,
+		},
+		SODIENTHOAI: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
 
-async function createDocGia(docGia) {
-    const db = getDB();
-    return await db.collection(DOCGIA_COLLECTION).insertOne(docGia);
-}
-
-async function findDocGia(query) {
-    const db = getDB();
-    return await db.collection(DOCGIA_COLLECTION).findOne(query);
-}
-
-module.exports = { createDocGia, findDocGia };
+module.exports = model("DOCGIA", DOCGIA);

@@ -1,12 +1,22 @@
-const { getDB } = require("../db");
+const { Schema, model } = require("mongoose");
 
-const NHAXUATBAN_COLLECTION = "NHAXUATBAN";
+const NHAXUATBAN = new Schema(
+	{
+		MANXB: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		TENNXB: {
+			type: String,
+			required: true,
+		},
+        DIACHI: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
 
-async function createNhaXuatBan(nhaXuatBan) {
-    const db = getDB();
-    return await db.collection(NHAXUATBAN_COLLECTION).insertOne(nhaXuatBan);
-}
-
-// Thêm các hàm khác cho NHAXUATBAN nếu cần thiết
-
-module.exports = { createNhaXuatBan };
+module.exports = model("NHAXUATBAN", NHAXUATBAN);

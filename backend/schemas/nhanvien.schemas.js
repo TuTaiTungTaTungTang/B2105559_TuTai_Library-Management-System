@@ -1,17 +1,34 @@
-const { getDB } = require("../db");
+const { Schema, model } = require("mongoose");
 
-const NHANVIEN_COLLECTION = "NHANVIEN";
+const NhanVien = new Schema(
+	{
+		MSNV: {
+			type: String,
+			required: true,
+			unique: true,
+		},
+		HoTenNV: {
+			type: String,
+			required: true,
+		},
+		Password: {
+			type: String,
+			required: true,
+		},
+		ChucVu: {
+			type: String,
+			required: true,
+		},
+        DiaChi: {
+			type: String,
+			required: true,
+		},
+        SoDienThoai: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
+);
 
-async function createNhanVien(nhanVien) {
-    const db = getDB();
-    return await db.collection(NHANVIEN_COLLECTION).insertOne(nhanVien);
-}
-
-async function findNhanVien(query) {
-    const db = getDB();
-    return await db.collection(NHANVIEN_COLLECTION).findOne(query);
-}
-
-// Thêm các hàm khác cho NHANVIEN nếu cần thiết
-
-module.exports = { createNhanVien, findNhanVien };
+module.exports = model("NhanVien", NhanVien);
