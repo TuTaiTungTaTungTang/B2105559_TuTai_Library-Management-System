@@ -1,8 +1,8 @@
 const jwt = require("../utils/jwt")
-const NhanVien = require("../schemas/nhanvien.schema")
-const DocGia = require("../schemas/docgia.schema")
+const LIBRARIAN = require("../schemas/librarian.schema")
+const MEMBER = require("../schemas/member.schema")
 
-const authNhanvien = async (req, res, next) => {
+const authLibrarian = async (req, res, next) => {
 	try {
         const token = req.headers.authorization?.split(" ")[1];
 		if (!token)
@@ -14,7 +14,7 @@ const authNhanvien = async (req, res, next) => {
 			return res.status(400).json({message: "Tai khoan chua dang nhap tren he thong"});
 		}
 
-		const existUser = await NhanVien.findById(decodeUser._id);
+		const existUser = await LIBRARIAN.findById(decodeUser._id);
 
 		if (!existUser) {
 			return res.status(400).json({message: "Tai khoan chua dang nhap tren he thong"});
@@ -26,9 +26,11 @@ const authNhanvien = async (req, res, next) => {
 	}
 };
 
-const authDocGia = async (req, res, next) => {
+const authMember = async (req, res, next) => {
+	console.log("Hello")
 	try {
         const token = req.headers.authorization?.split(" ")[1];
+		console.log(token)
 		if (!token)
             return res.status(400).json({message: "Tai khoan chua dang nhap tren he thong"});
 
@@ -38,7 +40,7 @@ const authDocGia = async (req, res, next) => {
 			return res.status(400).json({message: "Tai khoan chua dang nhap tren he thong"});
 		}
 
-		const existUser = await DocGia.findById(decodeUser._id);
+		const existUser = await MEMBER.findById(decodeUser._id);
 
 		if (!existUser) {
 			return res.status(400).json({message: "Tai khoan chua dang nhap tren he thong"});
@@ -50,4 +52,4 @@ const authDocGia = async (req, res, next) => {
 	}
 };
 
-module.exports = {authNhanvien, authDocGia}
+module.exports = {authLibrarian, authMember}

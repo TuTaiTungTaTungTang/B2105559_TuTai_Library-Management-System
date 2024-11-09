@@ -1,21 +1,23 @@
 const app = require("./app");
 const config = require("./app/config");
-const NhanVien = require("./schemas/nhanvien.schema")
+const LIBRARIAN = require("./schemas/librarian.schema")
 const bcrypt = require("./utils/bcrypt")
 
 const mongoose = require("mongoose");
+
 mongoose.connect("mongodb://127.0.0.1:27017/librarydb").then(async ()=>{
-    const numberOfNhanVien = await NhanVien.countDocuments();
-    if (numberOfNhanVien)
+    const numberOfLibrarian = await LIBRARIAN.countDocuments();
+    if (numberOfLibrarian)
         return;
-    const newNhanVien = await NhanVien.create({MSNV: "admin", 
-        HoTenNV: "admin", 
-        Password: bcrypt.hashPassword("admin"), 
-        ChucVu: "Tong Giam Doc",
-        DiaChi: "Can Tho",
-        SoDienThoai: "0123456789"
+    const newLibrarian = await LIBRARIAN.create({
+        MSNV: "admin", 
+        HOTENNV: "Huynh Tu Tai", 
+        MATKHAU: bcrypt.hashPassword("admin"), 
+        CHUCVU: "Quản lý",
+        DIACHI: "An Giang",
+        SODIENTHOAI: "0939554486"
     })
-    console.log(newNhanVien);
+    console.log(newLibrarian);
 });
 
 const PORT = config.app.port;
