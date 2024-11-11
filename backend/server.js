@@ -11,11 +11,11 @@ mongoose.connect("mongodb://127.0.0.1:27017/librarydb").then(async ()=>{
         return;
     const newLibrarian = await LIBRARIAN.create({
         MSNV: "admin", 
-        HOTENNV: "Lương Đức Huy", 
+        HOTENNV: "Huỳnh Tú Tài", 
         MATKHAU: bcrypt.hashPassword("admin"), 
         CHUCVU: "Quản lý",
         DIACHI: "Cần Thơ",
-        SODIENTHOAI: "0123456789"
+        SODIENTHOAI: "0939554486"
     })
     console.log(newLibrarian);
 });
