@@ -43,7 +43,7 @@ class LoanRecordController {
             console.log(loanRecords)
             for (let index = 0; index < loanRecords.length; index++) {
                 // const element = array[index];
-                if (today > loanRecords[index].NGAYTRA) {
+                if (loanRecords == 1 && today > loanRecords[index].NGAYTRA) {
                     const tmp = loanRecords[index]
                     tmp.TRANGTHAI = 3
                     await theodoimuonsach.findByIdAndUpdate(tmp.id, tmp)
@@ -61,11 +61,11 @@ class LoanRecordController {
     async getAllLoanRecord(req, res, next) {
         try {
             const today = new Date()
-            const loadRecords = await theodoimuonsach.find().populate('DOCGIA').populate('SACH')
-            for (let index = 0; index < loadRecords.length; index++) {
+            const loanRecords = await theodoimuonsach.find().populate('DOCGIA').populate('SACH')
+            for (let index = 0; index < loanRecords.length; index++) {
                 // const element = array[index];
-                if (today > loadRecords[index].NGAYTRA) {
-                    const tmp = loadRecords[index]
+                if (loanRecords == 1 &&today > loanRecords[index].NGAYTRA) {
+                    const tmp = loadnRecords[index]
                     tmp.TRANGTHAI = 3
                     await theodoimuonsach.findByIdAndUpdate(tmp.id, tmp)
                 }
