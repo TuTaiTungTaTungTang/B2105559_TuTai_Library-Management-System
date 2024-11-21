@@ -170,10 +170,52 @@ class BookController {
         }
     }
 
+    // async updateBook(req, res, next) {
+    //     try {
+    //         const {
+    //             TENSACH,
+    //             THELOAI,
+    //             DONGIA,
+    //             SOQUYEN,
+    //             NAMXUATBAN,
+    //             NHAXUATBAN,
+    //             TACGIA,
+    //             MOTA,
+    //             HINHANH
+    //         } = req.body;
+    //         const { id } = req.params;
+    //         const updateData = req.body;
+
+    //         // Kiểm tra xem sách có tồn tại hay không
+    //         let book = await BOOK.findById(id);
+    //         if (!book) {
+    //             return res.status(400).json({ message: 'Sách không tồn tại.' });
+    //         }
+
+    //         console.log(updateData)
+    //         // Cập nhật thông tin sách
+    //         const updatedBook = await BOOK.findByIdAndUpdate(id, {
+    //             TENSACH: TENSACH,
+    //             THELOAI: THELOAI,
+    //             DONGIA: DONGIA,
+    //             SOQUYEN: SOQUYEN,
+    //             NAMXUATBAN: NAMXUATBAN,
+    //             NHAXUATBAN: NHAXUATBAN,
+    //             TACGIA: TACGIA,
+    //             MOTA: MOTA,
+    //             HINHANH: HINHANH,
+    //         });
+
+    //         console.log(updatedBook)
+            
+    //         res.json({ message: 'Thông tin sách đã được cập nhật thành công.'});
+    //     } catch (error) {
+    //         next(error);
+    //     }
+    // }
     async updateBook(req, res, next) {
         try {
             const {
-                _id,
                 TENSACH,
                 THELOAI,
                 DONGIA,
@@ -184,30 +226,35 @@ class BookController {
                 MOTA,
                 HINHANH
             } = req.body;
-            // const { id } = req.params;
-            const updateData = req.body;
+            const { id } = req.params;
 
-            // Kiểm tra xem sách có tồn tại hay không
-            let book = await BOOK.findById(_id);
+            // Check if the book exists
+            const book = await BOOK.findById(id);
             if (!book) {
-                return res.status(400).json({ message: 'Sách không tồn tại.' });
+                return res.status(404).json({ message: "Sách không tồn tại." });
             }
 
-            // Cập nhật thông tin sách
-            book = await BOOK.findByIdAndUpdate(_id, {
-                TENSACH: TENSACH,
-                THELOAI: THELOAI,
-                DONGIA: DONGIA,
-                SOQUYEN: SOQUYEN,
-                NAMXUATBAN: NAMXUATBAN,
-                NHAXUATBAN: NHAXUATBAN,
-                TACGIA: TACGIA,
-                MOTA: MOTA,
-                HINHANH: HINHANH,
-            });
+            // Update book details
+            const updatedBook = await BOOK.findByIdAndUpdate(
+                id,
+                {
+                    TENSACH,
+                    THELOAI,
+                    DONGIA,
+                    SOQUYEN,
+                    NAMXUATBAN,
+                    NHAXUATBAN,
+                    TACGIA,
+                    MOTA,
+                    HINHANH
+                },
+                { new: true } // Return the updated book
+            );
 
-            res.json({ message: 'Thông tin sách đã được cập nhật thành công.'});
+            console.log("Updated Book:", updatedBook);
+            res.json({ message: "Thông tin sách đã được cập nhật thành công.", updatedBook });
         } catch (error) {
+            console.error("Error updating book:", error);
             next(error);
         }
     }
