@@ -5,7 +5,7 @@ const BookController = require("../controllers/book.controller")
 route.route("/").post(BookController.createBook);
 route.route("/").get(BookController.listAllBooks);
 // route.route("/id/:id").get(BookController.getBookInfor).patch(bookController.updateBook)
-route.route("/").put(bookController.updateBook)
+route.route("/:id").put(bookController.updateBook)
 route.route("/:type").get(BookController.find);
 route.route("/:id").delete(bookController.deleteBook)
 // route.route("/findbookbyauthor").get(SachController.findBooksByAuthor);
